@@ -4,6 +4,8 @@ import com.bulletin.bulletin.entity.User;
 import com.bulletin.bulletin.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -17,5 +19,14 @@ public class UserService {
         User user = new User(id);
 
         userRepository.save(user);
+    }
+
+    public User findExistUser(String id) throws Exception {
+        Optional<User> optionalWriter = userRepository.findById(id);
+
+        if(optionalWriter.isEmpty()) {
+            throw new Exception();
+        }
+        return optionalWriter.get();
     }
 }
