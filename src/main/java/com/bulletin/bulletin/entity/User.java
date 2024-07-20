@@ -8,4 +8,12 @@ public class User {
 
     @Id
     public String id;
+
+    public User() {
+
+    }
+
+    public User(String id) {
+        this.id = id;
+    }
 }
