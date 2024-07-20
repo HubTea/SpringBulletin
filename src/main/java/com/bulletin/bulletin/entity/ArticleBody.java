@@ -10,5 +10,18 @@ public class ArticleBody {
     public UUID id;
 
     @Column(length = 10000)
-    private String body;
+    public String body;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    public Article article;
+
+    public ArticleBody() {
+
+    }
+
+    public ArticleBody(String body, Article article) {
+        this.body = body;
+        this.article = article;
+    }
 }
