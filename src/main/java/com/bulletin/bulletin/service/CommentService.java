@@ -5,8 +5,10 @@ import com.bulletin.bulletin.entity.Comment;
 import com.bulletin.bulletin.entity.User;
 import com.bulletin.bulletin.repository.CommentRepository;
 import com.bulletin.bulletin.repository.UserRepository;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -39,5 +41,14 @@ public class CommentService {
         Comment comment = new Comment(body, writer, article);
 
         commentRepository.save(comment);
+    }
+
+    public List<Comment> getPage(Integer number, Integer size, UUID articleId) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt", "id");
+        Pageable pageable = PageRequest.of(number, size, sort);
+
+        Slice<Comment> slice = commentRepository.findByArticleId(articleId, pageable);
+
+        return slice.getContent();
     }
 }
