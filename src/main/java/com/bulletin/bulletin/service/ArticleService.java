@@ -9,6 +9,7 @@ import com.bulletin.bulletin.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ArticleService {
@@ -37,5 +38,14 @@ public class ArticleService {
 
         articleBodyRepository.save(articleBody);
         articleRepository.save(article);
+    }
+
+    public Article findExistArticle(UUID id) throws Exception {
+        Optional<Article> optionalArticle = articleRepository.findById(id);
+
+        if(optionalArticle.isEmpty()) {
+            throw new Exception();
+        }
+        return optionalArticle.get();
     }
 }
