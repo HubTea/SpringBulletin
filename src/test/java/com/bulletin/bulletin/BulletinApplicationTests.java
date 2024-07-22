@@ -35,10 +35,6 @@ class BulletinApplicationTests {
 		for(String[] article: articleList) {
 			articleService.create(userId, article[0], article[1]);
 		}
-
-		for(String comment: commentList) {
-			commentService.create(userId, comment);
-		}
 	}
 
 }
