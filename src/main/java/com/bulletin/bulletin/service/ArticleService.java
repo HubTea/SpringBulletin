@@ -35,7 +35,7 @@ public class ArticleService {
         Article article = new Article(title, 0, optionalWriter.get());
         ArticleBody articleBody = new ArticleBody(body, article);
 
-        articleRepository.save(article);
         articleBodyRepository.save(articleBody);
+        articleRepository.save(article);
     }
 }
