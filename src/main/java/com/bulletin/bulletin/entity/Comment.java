@@ -21,12 +21,16 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     public User writer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    public Article article;
+
     public Comment() {
 
     }
 
-    public Comment(String body, User writer) {
+    public Comment(String body, User writer, Article article) {
         this.body = body;
         this.writer = writer;
+        this.article = article;
     }
 }
