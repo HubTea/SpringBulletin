@@ -5,9 +5,9 @@ import com.bulletin.bulletin.entity.Comment;
 import com.bulletin.bulletin.entity.User;
 import com.bulletin.bulletin.repository.CommentRepository;
 import com.bulletin.bulletin.repository.UserRepository;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,13 +54,19 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<Comment> getPage(Integer number, Integer size, UUID articleId) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt", "id");
-        Pageable pageable = PageRequest.of(number, size, sort);
+    public Page<Comment> getPage(UUID articleId, UUID parentId, LocalDateTime cursorCreatedAt, UUID cursorId, Integer pageSize) {
+        List<Comment> page = null;
 
-        Slice<Comment> slice = commentRepository.findByArticleId(articleId, pageable);
+        if(parentId == null) {
+            page = commentRepository.findByArticleId(articleId, cursorCreatedAt, cursorId, pageSize + 1);
+        }
+        else {
+            page = commentRepository.findByArticleIdAndParentId(articleId, parentId, cursorCreatedAt, cursorId, pageSize + 1);
+        }
 
-        return slice.getContent();
+        Boolean isLast = (page.size() != pageSize + 1);
+        page = page.subList(0, Math.min(pageSize, page.size()));
+        return new Page<>(page, isLast);
     }
 
 }
