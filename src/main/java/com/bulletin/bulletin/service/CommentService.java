@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -35,11 +36,21 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void create(String body, String writerId, UUID articleId) throws Exception {
+    public void create(String body, String writerId, UUID articleId, UUID parentId) throws Exception {
         User writer = userService.findExistUser(writerId);
         Article article = articleService.findExistArticle(articleId);
-        Comment comment = new Comment(body, writer, article);
+        Comment parent = null;
 
+        if(parentId != null) {
+            Optional<Comment> optionalParent = commentRepository.findById(parentId);
+
+            if(optionalParent.isEmpty()) {
+                throw new Exception();
+            }
+            parent = optionalParent.get();
+        }
+
+        Comment comment = new Comment(body, writer, article, parent);
         commentRepository.save(comment);
     }
 
@@ -51,4 +62,5 @@ public class CommentService {
 
         return slice.getContent();
     }
+
 }

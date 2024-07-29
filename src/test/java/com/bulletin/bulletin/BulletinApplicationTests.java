@@ -35,6 +35,9 @@ class BulletinApplicationTests {
 		String[] commentList = {
 				"comment1", "comment2", "comment3"
 		};
+		String[] childCommentList = {
+				"childComment1", "childComment2", "childComment3"
+		};
 
 		userService.create(userId);
 
@@ -51,7 +54,7 @@ class BulletinApplicationTests {
 		Article targetArticle = articlePage.get(0);
 
 		for(String commentBody: commentList) {
-			commentService.create(commentBody, userId, targetArticle.id);
+			commentService.create(commentBody, userId, targetArticle.id, null);
 		}
 
 		List<Comment> commentPage = commentService.getPage(0, 2, targetArticle.id);
@@ -59,6 +62,12 @@ class BulletinApplicationTests {
 		assertEquals(2, commentPage.size());
 		assertEquals("comment1", commentPage.get(0).body);
 		assertEquals("comment2", commentPage.get(1).body);
+
+		Comment targetComment = commentPage.get(0);
+
+		for(String body: childCommentList) {
+			commentService.create(body, userId, targetArticle.id, targetComment.id);
+		}
 	}
 
 }

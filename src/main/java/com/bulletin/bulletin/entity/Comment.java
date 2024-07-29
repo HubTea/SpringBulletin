@@ -24,13 +24,17 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     public Article article;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    public Comment parent;
+
     public Comment() {
 
     }
 
-    public Comment(String body, User writer, Article article) {
+    public Comment(String body, User writer, Article article, Comment parent) {
         this.body = body;
         this.writer = writer;
         this.article = article;
+        this.parent = parent;
     }
 }
