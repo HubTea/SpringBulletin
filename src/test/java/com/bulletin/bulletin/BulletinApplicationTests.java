@@ -1,6 +1,7 @@
 package com.bulletin.bulletin;
 
 import com.bulletin.bulletin.entity.Article;
+import com.bulletin.bulletin.entity.ArticleBody;
 import com.bulletin.bulletin.entity.Comment;
 import com.bulletin.bulletin.service.ArticleService;
 import com.bulletin.bulletin.service.CommentService;
@@ -58,6 +59,10 @@ class BulletinApplicationTests {
 
 
 		Article targetArticle = articlePage.get(0).article;
+
+		ArticleBody articleBody = articleService.getBody(targetArticle.id, userId);
+
+		assertEquals("body3", articleBody.body);
 
 		for(String commentBody: commentList) {
 			commentService.create(commentBody, userId, targetArticle.id, null);
