@@ -50,13 +50,14 @@ class BulletinApplicationTests {
 			articleService.create(userId, article[0], article[1]);
 		}
 
-		List<Article> articlePage = articleService.getPage(0, 2);
+		List<ArticleService.PageEntry> articlePage = articleService.getPage(0, 2, userId);
 
 		assertEquals(2, articlePage.size());
-		assertEquals("title3", articlePage.get(0).title);
-		assertEquals("title2", articlePage.get(1).title);
+		assertEquals("title3", articlePage.get(0).article.title);
+		assertEquals("title2", articlePage.get(1).article.title);
 
-		Article targetArticle = articlePage.get(0);
+
+		Article targetArticle = articlePage.get(0).article;
 
 		for(String commentBody: commentList) {
 			commentService.create(commentBody, userId, targetArticle.id, null);
