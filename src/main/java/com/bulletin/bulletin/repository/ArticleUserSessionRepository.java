@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface ArticleUserSessionRepository extends ListCrudRepository<ArticleUserSession, ArticleUserSession.Id> {
 
-    @Query("select session from ArticleUserSession session where session.id.article.id in :articleIdList and session.id.user.id = :userId")
+    @Query("select session from ArticleUserSession session where session.id.articleId in :articleIdList and session.id.userId = :userId")
     List<ArticleUserSession> findByArticleIdAndUserId(List<UUID> articleIdList, String userId);
 }
