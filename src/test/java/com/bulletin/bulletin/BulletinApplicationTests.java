@@ -57,12 +57,7 @@ class BulletinApplicationTests {
 		assertEquals("title3", articlePage.get(0).article.title);
 		assertEquals("title2", articlePage.get(1).article.title);
 
-
 		Article targetArticle = articlePage.get(0).article;
-
-		ArticleBody articleBody = articleService.getBody(targetArticle.id, userId);
-
-		assertEquals("body3", articleBody.body);
 
 		for(String commentBody: commentList) {
 			commentService.create(commentBody, userId, targetArticle.id, null);
@@ -113,6 +108,32 @@ class BulletinApplicationTests {
 		assertEquals(0, treeCommentPage.content.get(1).depth);
 		assertEquals("comment3", treeCommentPage.content.get(2).comment.body);
 		assertEquals(0, treeCommentPage.content.get(2).depth);
+
+		List<ArticleService.PageEntry> articlePageEntryList = articleService.getPage(0, 3, userId);
+
+		assertEquals(3, articlePageEntryList.size());
+		assertEquals(false, articlePageEntryList.get(0).isVisited);
+		assertEquals(6, articlePageEntryList.get(0).article.commentVersion);
+		assertEquals(false, articlePageEntryList.get(1).isVisited);
+		assertEquals(false, articlePageEntryList.get(2).isVisited);
+
+		ArticleBody articleBody = articleService.getBody(targetArticle.id, userId);
+
+		assertEquals("body3", articleBody.body);
+
+		articlePageEntryList = articleService.getPage(0, 3, userId);
+
+		assertEquals(3, articlePageEntryList.size());
+		assertEquals(true, articlePageEntryList.get(0).isVisited);
+		assertEquals(true, articlePageEntryList.get(0).isUpdated);
+		assertEquals(false, articlePageEntryList.get(1).isVisited);
+		assertEquals(false, articlePageEntryList.get(2).isVisited);
+
+		commentService.create("newComment", userId, targetArticle.id, null);
+		articlePageEntryList = articleService.getPage(0, 3, userId);
+
+		assertEquals(false, articlePageEntryList.get(0).isUpdated);
+		assertEquals(7, articlePageEntryList.get(0).article.commentVersion);
 	}
 
 }
