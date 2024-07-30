@@ -6,6 +6,7 @@ import com.bulletin.bulletin.entity.User;
 import com.bulletin.bulletin.repository.CommentRepository;
 import com.bulletin.bulletin.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -149,6 +150,7 @@ public class CommentService {
     }
 
     //parentId는 nullable
+    @Transactional
     public void create(String body, String writerId, UUID articleId, UUID parentId) throws Exception {
         User writer = userService.findExistUser(writerId);
         Article article = articleService.findExistArticle(articleId);
@@ -165,6 +167,7 @@ public class CommentService {
 
         Comment comment = new Comment(body, writer, article, parent);
         commentRepository.save(comment);
+        article.commentVersion++;
     }
 
     //parentId는 nullable
