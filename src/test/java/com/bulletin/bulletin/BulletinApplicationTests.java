@@ -6,6 +6,8 @@ import com.bulletin.bulletin.service.ArticleService;
 import com.bulletin.bulletin.service.CommentService;
 import com.bulletin.bulletin.service.Page;
 import com.bulletin.bulletin.service.UserService;
+
+import static com.bulletin.bulletin.common.Constant.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +62,8 @@ class BulletinApplicationTests {
 			commentService.create(commentBody, userId, targetArticle.id, null);
 		}
 
-		LocalDateTime minDate = LocalDateTime.of(2000, 1, 1, 0, 0);
-		UUID minId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+		LocalDateTime minDate = MIN_DATE;
+		UUID minId = MIN_UUID;
 
 		Page<Comment> commentPage = commentService.getPage(targetArticle.id, null, minDate, minId, 2);
 
@@ -83,6 +85,28 @@ class BulletinApplicationTests {
 		assertEquals("childComment1", childCommentPage.content.get(0).body);
 		assertEquals("childComment2", childCommentPage.content.get(1).body);
 		assertEquals("childComment3", childCommentPage.content.get(2).body);
+
+		CommentService.TreePage treeCommentPage = commentService.getTreePage(targetArticle.id, 3);
+
+		assertEquals(3, treeCommentPage.cursorList.size());
+		assertEquals(3, treeCommentPage.content.size());
+		assertEquals("comment1", treeCommentPage.content.get(0).comment.body);
+		assertEquals(0, treeCommentPage.content.get(0).depth);
+		assertEquals("childComment1", treeCommentPage.content.get(1).comment.body);
+		assertEquals(1, treeCommentPage.content.get(1).depth);
+		assertEquals("childComment2", treeCommentPage.content.get(2).comment.body);
+		assertEquals(1, treeCommentPage.content.get(2).depth);
+
+		treeCommentPage = commentService.getTreePage(targetArticle.id, treeCommentPage.cursorList, 10);
+
+		assertEquals(1, treeCommentPage.cursorList.size());
+		assertEquals(3, treeCommentPage.content.size());
+		assertEquals("childComment3", treeCommentPage.content.get(0).comment.body);
+		assertEquals(1, treeCommentPage.content.get(0).depth);
+		assertEquals("comment2", treeCommentPage.content.get(1).comment.body);
+		assertEquals(0, treeCommentPage.content.get(1).depth);
+		assertEquals("comment3", treeCommentPage.content.get(2).comment.body);
+		assertEquals(0, treeCommentPage.content.get(2).depth);
 	}
 
 }
