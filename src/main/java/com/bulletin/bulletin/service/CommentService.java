@@ -27,6 +27,7 @@ public class CommentService {
 
         public UUID id;
 
+        //parentId는 nullable
         public Cursor(UUID parentId, LocalDateTime time, UUID id) {
             this.parentId = parentId;
             this.time = time;
@@ -147,6 +148,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    //parentId는 nullable
     public void create(String body, String writerId, UUID articleId, UUID parentId) throws Exception {
         User writer = userService.findExistUser(writerId);
         Article article = articleService.findExistArticle(articleId);
@@ -165,6 +167,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    //parentId는 nullable
     public Page<Comment> getPage(UUID articleId, UUID parentId, LocalDateTime cursorCreatedAt, UUID cursorId, Integer pageSize) {
         List<Comment> page = null;
 
