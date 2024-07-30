@@ -26,6 +26,7 @@ public class ArticleService {
 
         public Article article;
 
+        //isVisited가 false인 경우 isUpdated는 아무 의미가 없다.
         public Boolean isUpdated;
 
         public Boolean isVisited;
@@ -117,7 +118,7 @@ public class ArticleService {
             outdated = false;
 
             for(ArticleUserSession session: sessionList) {
-                if(article.id != session.id.article.id) {
+                if(!article.id.equals(session.id.articleId)) {
                     continue;
                 }
 
