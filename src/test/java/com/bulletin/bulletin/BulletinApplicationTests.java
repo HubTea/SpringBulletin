@@ -87,6 +87,7 @@ class BulletinApplicationTests {
 		assertEquals("childComment2", childCommentPage.content.get(1).getBody());
 		assertEquals("childComment3", childCommentPage.content.get(2).getBody());
 
+		//연속으로 getTreePage를 호출했을 때 기대한 결과가 나오는 지 테스트
 		CommentService.TreePage treeCommentPage = commentService.getTreePage(targetArticle.getId(), 3);
 
 		assertEquals(3, treeCommentPage.cursorList.size());
@@ -108,7 +109,9 @@ class BulletinApplicationTests {
 		assertEquals(0, treeCommentPage.content.get(1).depth);
 		assertEquals("comment3", treeCommentPage.content.get(2).comment.getBody());
 		assertEquals(0, treeCommentPage.content.get(2).depth);
+		//
 
+		//위에서 댓글 생성 시 게시글의 commentVersion이 제대로 증가했는지 테스트
 		List<ArticleService.PageEntry> articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(3, articlePageEntryList.size());
@@ -116,11 +119,13 @@ class BulletinApplicationTests {
 		assertEquals(6, articlePageEntryList.get(0).article.getCommentVersion());
 		assertEquals(false, articlePageEntryList.get(1).isVisited);
 		assertEquals(false, articlePageEntryList.get(2).isVisited);
+		//
 
 		ArticleBody articleBody = articleService.getBody(targetArticle.getId(), userId);
 
 		assertEquals("body3", articleBody.getBody());
 
+		//위에서 본문을 조회한 이후 올바른 commentVersion 값을 가지고 ArticleUserSession이 생성되었는지 테스트
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(3, articlePageEntryList.size());
@@ -128,18 +133,23 @@ class BulletinApplicationTests {
 		assertEquals(true, articlePageEntryList.get(0).isUpdated);
 		assertEquals(false, articlePageEntryList.get(1).isVisited);
 		assertEquals(false, articlePageEntryList.get(2).isVisited);
+		//
 
+		//새 댓글이 작성된 이후 게시글 목록 조회 시, 본문 조회 이후 새 댓글이 달렸단 것을 목록에서 제대로 표시해 주는지 테스트
 		commentService.create("newComment", userId, targetArticle.getId(), null);
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(false, articlePageEntryList.get(0).isUpdated);
 		assertEquals(7, articlePageEntryList.get(0).article.getCommentVersion());
+		//
 
+		//이미 ArticleUserSession이 존재하는 상태에서 본문 조회 시 ArticleUserSession.commentVersion이 제대로 업데이트 되는지 테스트
 		articleService.getBody(targetArticle.getId(), userId);
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(true, articlePageEntryList.get(0).isVisited);
 		assertEquals(true, articlePageEntryList.get(0).isUpdated);
+		//
 	}
 
 }
