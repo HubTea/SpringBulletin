@@ -54,72 +54,72 @@ class BulletinApplicationTests {
 		List<ArticleService.PageEntry> articlePage = articleService.getPage(0, 2, userId);
 
 		assertEquals(2, articlePage.size());
-		assertEquals("title3", articlePage.get(0).article.title);
-		assertEquals("title2", articlePage.get(1).article.title);
+		assertEquals("title3", articlePage.get(0).article.getTitle());
+		assertEquals("title2", articlePage.get(1).article.getTitle());
 
 		Article targetArticle = articlePage.get(0).article;
 
 		for(String commentBody: commentList) {
-			commentService.create(commentBody, userId, targetArticle.id, null);
+			commentService.create(commentBody, userId, targetArticle.getId(), null);
 		}
 
 		LocalDateTime minDate = MIN_DATE;
 		UUID minId = MIN_UUID;
 
-		Page<Comment> commentPage = commentService.getPage(targetArticle.id, null, minDate, minId, 2);
+		Page<Comment> commentPage = commentService.getPage(targetArticle.getId(), null, minDate, minId, 2);
 
 		assertEquals(false, commentPage.isLast);
 		assertEquals(2, commentPage.content.size());
-		assertEquals("comment1", commentPage.content.get(0).body);
-		assertEquals("comment2", commentPage.content.get(1).body);
+		assertEquals("comment1", commentPage.content.get(0).getBody());
+		assertEquals("comment2", commentPage.content.get(1).getBody());
 
 		Comment targetComment = commentPage.content.get(0);
 
 		for(String body: childCommentList) {
-			commentService.create(body, userId, targetArticle.id, targetComment.id);
+			commentService.create(body, userId, targetArticle.getId(), targetComment.getId());
 		}
 
-		Page<Comment> childCommentPage = commentService.getPage(targetArticle.id, targetComment.id, minDate, minId, 4);
+		Page<Comment> childCommentPage = commentService.getPage(targetArticle.getId(), targetComment.getId(), minDate, minId, 4);
 
 		assertEquals(true, childCommentPage.isLast);
 		assertEquals(3, childCommentPage.content.size());
-		assertEquals("childComment1", childCommentPage.content.get(0).body);
-		assertEquals("childComment2", childCommentPage.content.get(1).body);
-		assertEquals("childComment3", childCommentPage.content.get(2).body);
+		assertEquals("childComment1", childCommentPage.content.get(0).getBody());
+		assertEquals("childComment2", childCommentPage.content.get(1).getBody());
+		assertEquals("childComment3", childCommentPage.content.get(2).getBody());
 
-		CommentService.TreePage treeCommentPage = commentService.getTreePage(targetArticle.id, 3);
+		CommentService.TreePage treeCommentPage = commentService.getTreePage(targetArticle.getId(), 3);
 
 		assertEquals(3, treeCommentPage.cursorList.size());
 		assertEquals(3, treeCommentPage.content.size());
-		assertEquals("comment1", treeCommentPage.content.get(0).comment.body);
+		assertEquals("comment1", treeCommentPage.content.get(0).comment.getBody());
 		assertEquals(0, treeCommentPage.content.get(0).depth);
-		assertEquals("childComment1", treeCommentPage.content.get(1).comment.body);
+		assertEquals("childComment1", treeCommentPage.content.get(1).comment.getBody());
 		assertEquals(1, treeCommentPage.content.get(1).depth);
-		assertEquals("childComment2", treeCommentPage.content.get(2).comment.body);
+		assertEquals("childComment2", treeCommentPage.content.get(2).comment.getBody());
 		assertEquals(1, treeCommentPage.content.get(2).depth);
 
-		treeCommentPage = commentService.getTreePage(targetArticle.id, treeCommentPage.cursorList, 10);
+		treeCommentPage = commentService.getTreePage(targetArticle.getId(), treeCommentPage.cursorList, 10);
 
 		assertEquals(1, treeCommentPage.cursorList.size());
 		assertEquals(3, treeCommentPage.content.size());
-		assertEquals("childComment3", treeCommentPage.content.get(0).comment.body);
+		assertEquals("childComment3", treeCommentPage.content.get(0).comment.getBody());
 		assertEquals(1, treeCommentPage.content.get(0).depth);
-		assertEquals("comment2", treeCommentPage.content.get(1).comment.body);
+		assertEquals("comment2", treeCommentPage.content.get(1).comment.getBody());
 		assertEquals(0, treeCommentPage.content.get(1).depth);
-		assertEquals("comment3", treeCommentPage.content.get(2).comment.body);
+		assertEquals("comment3", treeCommentPage.content.get(2).comment.getBody());
 		assertEquals(0, treeCommentPage.content.get(2).depth);
 
 		List<ArticleService.PageEntry> articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(3, articlePageEntryList.size());
 		assertEquals(false, articlePageEntryList.get(0).isVisited);
-		assertEquals(6, articlePageEntryList.get(0).article.commentVersion);
+		assertEquals(6, articlePageEntryList.get(0).article.getCommentVersion());
 		assertEquals(false, articlePageEntryList.get(1).isVisited);
 		assertEquals(false, articlePageEntryList.get(2).isVisited);
 
-		ArticleBody articleBody = articleService.getBody(targetArticle.id, userId);
+		ArticleBody articleBody = articleService.getBody(targetArticle.getId(), userId);
 
-		assertEquals("body3", articleBody.body);
+		assertEquals("body3", articleBody.getBody());
 
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
@@ -129,13 +129,13 @@ class BulletinApplicationTests {
 		assertEquals(false, articlePageEntryList.get(1).isVisited);
 		assertEquals(false, articlePageEntryList.get(2).isVisited);
 
-		commentService.create("newComment", userId, targetArticle.id, null);
+		commentService.create("newComment", userId, targetArticle.getId(), null);
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(false, articlePageEntryList.get(0).isUpdated);
-		assertEquals(7, articlePageEntryList.get(0).article.commentVersion);
+		assertEquals(7, articlePageEntryList.get(0).article.getCommentVersion());
 
-		articleService.getBody(targetArticle.id, userId);
+		articleService.getBody(targetArticle.getId(), userId);
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(true, articlePageEntryList.get(0).isVisited);

@@ -8,19 +8,36 @@ import java.util.UUID;
 
 @Entity
 public class Article {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID id;
+    private UUID id;
 
-    public String title;
+    private String title;
 
-    public Integer commentVersion;
+    private Integer commentVersion;
 
     @CreationTimestamp
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public User writer;
+    private User writer;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Integer getCommentVersion() {
+        return commentVersion;
+    }
+
+    public void setCommentVersion(Integer x) {
+        commentVersion = x;
+    }
 
     public Article() {
 

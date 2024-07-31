@@ -11,21 +11,33 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID id;
+    private UUID id;
 
-    public String body;
+    private String body;
 
     @CreationTimestamp
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public User writer;
+    private User writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Article article;
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Comment parent;
+    private Comment parent;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
     public Comment() {
 

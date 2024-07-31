@@ -10,34 +10,50 @@ public class ArticleUserSession {
     @Embeddable
     public static class Id {
 
-        public UUID articleId;
+        private UUID articleId;
 
-        public String userId;
+        private String userId;
+
+        public UUID getArticleId() {
+            return articleId;
+        }
 
         public Id() {
 
         }
 
         public Id(Article article, User user) {
-            this.articleId = article.id;
+            this.articleId = article.getId();
             this.userId = user.getId();
         }
     }
 
     @EmbeddedId
-    public Id id;
+    private Id id;
 
-    public int commentVersion;
+    private int commentVersion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("articleId")
     @JoinColumn(name = "articleId", referencedColumnName = "id")
-    public Article article;
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    public User user;
+    private User user;
+
+    public Id getId() {
+        return id;
+    }
+
+    public int getCommentVersion() {
+        return commentVersion;
+    }
+
+    public void setCommentVersion(int x) {
+        commentVersion = x;
+    }
 
     public ArticleUserSession() {
 

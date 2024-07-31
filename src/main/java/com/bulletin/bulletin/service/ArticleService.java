@@ -106,7 +106,7 @@ public class ArticleService {
 
         Page<Article> articleList = articleRepository.findAll(pageable);
 
-        List<UUID> articleIdList = articleList.getContent().stream().map(article -> article.id).toList();
+        List<UUID> articleIdList = articleList.getContent().stream().map(Article::getId).toList();
 
         List<ArticleUserSession> sessionList = articleUserSessionRepository.findByArticleIdAndUserId(articleIdList, userId);
 
@@ -119,12 +119,12 @@ public class ArticleService {
             outdated = false;
 
             for(ArticleUserSession session: sessionList) {
-                if(!article.id.equals(session.id.articleId)) {
+                if(!article.getId().equals(session.getId().getArticleId())) {
                     continue;
                 }
 
                 joined = true;
-                outdated = article.commentVersion > session.commentVersion;
+                outdated = article.getCommentVersion() > session.getCommentVersion();
                 break;
             }
             page.add(new PageEntry(article, !outdated, joined));
@@ -140,11 +140,11 @@ public class ArticleService {
         Optional<ArticleUserSession> optionalSession = articleUserSessionRepository.findById(new ArticleUserSession.Id(article, user));
 
         if(optionalSession.isEmpty()) {
-            articleUserSessionService.create(id, userId, article.commentVersion);
+            articleUserSessionService.create(id, userId, article.getCommentVersion());
         }
         else {
             ArticleUserSession session = optionalSession.get();
-            session.commentVersion = article.commentVersion;
+            session.setCommentVersion(article.getCommentVersion());
         }
 
         return findExistBody(id);

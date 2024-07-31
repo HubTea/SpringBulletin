@@ -112,10 +112,10 @@ public class CommentService {
             Page<Comment> page = CommentService.this.getPage(articleId, cursor.parentId, cursor.time, cursor.id, pageSize);
             for(Comment comment: page.content) {
                 treePage.add(new TreePageEntry(comment, depth));
-                cursor.time = comment.createdAt;
-                cursor.id = comment.id;
+                cursor.time = comment.getCreatedAt();
+                cursor.id = comment.getId();
 
-                cursorList.add(new Cursor(comment.id, MIN_DATE, MIN_UUID));
+                cursorList.add(new Cursor(comment.getId(), MIN_DATE, MIN_UUID));
                 build(depth + 1);
                 if(isComplete()) {
                     return;
@@ -167,7 +167,7 @@ public class CommentService {
 
         Comment comment = new Comment(body, writer, article, parent);
         commentRepository.save(comment);
-        article.commentVersion++;
+        article.setCommentVersion(article.getCommentVersion() + 1);
     }
 
     //parentId는 nullable

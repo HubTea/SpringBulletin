@@ -6,15 +6,20 @@ import java.util.UUID;
 
 @Entity
 public class ArticleBody {
+
     @Id
-    public UUID id;
+    private UUID id;
 
     @Column(length = 10000)
-    public String body;
+    private String body;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    public Article article;
+    private Article article;
+
+    public String getBody() {
+        return body;
+    }
 
     public ArticleBody() {
 
