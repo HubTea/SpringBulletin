@@ -3,10 +3,12 @@ package com.bulletin.bulletin.service;
 import com.bulletin.bulletin.entity.User;
 import com.bulletin.bulletin.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
 
     UserRepository userRepository;

@@ -18,6 +18,7 @@ import static com.bulletin.bulletin.common.Constant.*;
 
 
 @Service
+@Transactional
 public class CommentService {
 
     public static class Cursor {
@@ -150,7 +151,6 @@ public class CommentService {
     }
 
     //parentId는 nullable
-    @Transactional
     public void create(String body, String writerId, UUID articleId, UUID parentId) throws Exception {
         User writer = userService.findExistUser(writerId);
         Article article = articleService.findExistArticle(articleId);

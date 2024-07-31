@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class ArticleService {
 
     public static class PageEntry {
@@ -67,6 +68,7 @@ public class ArticleService {
         this.articleUserSessionService = articleUserSessionService;
     }
 
+    @Transactional
     public void create(String writerId, String title, String body) throws Exception {
         Optional<User> optionalWriter = userRepository.findById(writerId);
 
