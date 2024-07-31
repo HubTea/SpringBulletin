@@ -13,19 +13,25 @@ public interface CommentRepository extends
         ListCrudRepository<Comment, UUID>,
         ListPagingAndSortingRepository<Comment, UUID>
 {
-    @Query(
-            "select comment from Comment comment " +
-            "where comment.article.id = :articleId and comment.parent.id is null and " +
-                    "(comment.createdAt > :cursorCreatedAt or (comment.createdAt = :cursorCreatedAt and comment.id > :cursorId)) " +
-            "order by comment.createdAt, comment.id limit :limit"
-    )
+    @Query("""
+            select comment
+            from Comment comment
+            where
+                comment.article.id = :articleId and comment.parent.id is null and
+                (comment.createdAt, comment.id) > (:cursorCreatedAt, :cursorId)
+            order by comment.createdAt, comment.id
+            limit :limit
+    """)
     List<Comment> findByArticleId(UUID articleId, LocalDateTime cursorCreatedAt, UUID cursorId, Integer limit);
 
-    @Query(
-            "select comment from Comment comment " +
-            "where comment.article.id = :articleId and comment.parent.id = :parentId and " +
-                "(comment.createdAt > :cursorCreatedAt or (comment.createdAt = :cursorCreatedAt and comment.id > :cursorId)) " +
-            "order by comment.createdAt, comment.id limit :limit"
-    )
+    @Query("""
+            select comment
+            from Comment comment
+            where
+                comment.article.id = :articleId and comment.parent.id = :parentId and
+                (comment.createdAt, comment.id) > (:cursorCreatedAt, :cursorId)
+            order by comment.createdAt, comment.id
+            limit :limit
+    """)
     List<Comment> findByArticleIdAndParentId(UUID articleId, UUID parentId, LocalDateTime cursorCreatedAt, UUID cursorId, Integer limit);
 }
