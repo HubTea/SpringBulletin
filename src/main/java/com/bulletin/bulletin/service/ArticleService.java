@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +133,7 @@ public class ArticleService {
         return page;
     }
 
+    @Transactional
     public ArticleBody getBody(UUID id, String userId) throws Exception{
         Article article = findExistArticle(id);
         User user = userService.findExistUser(userId);

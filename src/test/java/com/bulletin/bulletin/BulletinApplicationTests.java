@@ -134,6 +134,12 @@ class BulletinApplicationTests {
 
 		assertEquals(false, articlePageEntryList.get(0).isUpdated);
 		assertEquals(7, articlePageEntryList.get(0).article.commentVersion);
+
+		articleService.getBody(targetArticle.id, userId);
+		articlePageEntryList = articleService.getPage(0, 3, userId);
+
+		assertEquals(true, articlePageEntryList.get(0).isVisited);
+		assertEquals(true, articlePageEntryList.get(0).isUpdated);
 	}
 
 }

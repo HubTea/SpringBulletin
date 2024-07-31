@@ -20,7 +20,7 @@ public class ArticleUserSession {
 
         public Id(Article article, User user) {
             this.articleId = article.id;
-            this.userId = user.id;
+            this.userId = user.getId();
         }
     }
 
