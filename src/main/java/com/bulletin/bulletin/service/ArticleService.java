@@ -114,11 +114,11 @@ public class ArticleService {
 
         List<PageEntry> page = new ArrayList<>();
         boolean joined;
-        boolean outdated;
+        boolean updated;
 
         for(Article article: articleList.getContent()) {
             joined = false;
-            outdated = false;
+            updated = false;
 
             for(ArticleUserSession session: sessionList) {
                 if(!article.getId().equals(session.getId().getArticleId())) {
@@ -126,10 +126,10 @@ public class ArticleService {
                 }
 
                 joined = true;
-                outdated = article.getCommentVersion() > session.getCommentVersion();
+                updated = article.getCommentVersion() > session.getCommentVersion();
                 break;
             }
-            page.add(new PageEntry(article, !outdated, joined));
+            page.add(new PageEntry(article, updated, joined));
         }
 
         return page;

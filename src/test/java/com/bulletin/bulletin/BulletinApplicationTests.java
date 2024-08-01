@@ -130,7 +130,7 @@ class BulletinApplicationTests {
 
 		assertEquals(3, articlePageEntryList.size());
 		assertEquals(true, articlePageEntryList.get(0).isVisited);
-		assertEquals(true, articlePageEntryList.get(0).isUpdated);
+		assertEquals(false, articlePageEntryList.get(0).isUpdated);
 		assertEquals(false, articlePageEntryList.get(1).isVisited);
 		assertEquals(false, articlePageEntryList.get(2).isVisited);
 		//
@@ -139,7 +139,7 @@ class BulletinApplicationTests {
 		commentService.create("newComment", userId, targetArticle.getId(), null);
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
-		assertEquals(false, articlePageEntryList.get(0).isUpdated);
+		assertEquals(true, articlePageEntryList.get(0).isUpdated);
 		assertEquals(7, articlePageEntryList.get(0).article.getCommentVersion());
 		//
 
@@ -148,7 +148,7 @@ class BulletinApplicationTests {
 		articlePageEntryList = articleService.getPage(0, 3, userId);
 
 		assertEquals(true, articlePageEntryList.get(0).isVisited);
-		assertEquals(true, articlePageEntryList.get(0).isUpdated);
+		assertEquals(false, articlePageEntryList.get(0).isUpdated);
 		//
 	}
 
